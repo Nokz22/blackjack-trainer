@@ -1,0 +1,19 @@
+#Logs
+*.log
+
+#Java archives
+*.jar
+*.war
+*.ear
+
+#Maven wrapper
+.mvn/
+mvnw
+mvnw.cmd
+
+#Temp files
+*.tmp
+*.swp
+
+#IntelliJ extra
+out/
