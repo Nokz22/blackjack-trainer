@@ -17,3 +17,5 @@ mvnw.cmd
 
 #IntelliJ extra
 out/
+testAi
+testAi.pub
