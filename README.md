@@ -27,7 +27,7 @@
 └─────────────────────────────────────────────────────────┘
 ```
 
-> _Add real screenshots to `/docs/screenshots/` and update paths here._
+
 
 ---
 
