@@ -17,3 +17,10 @@ mvnw.cmd
 
 #IntelliJ extra
 out/
+testAi
+testAi.pub
+
+
+target/
+.idea/
+*.class

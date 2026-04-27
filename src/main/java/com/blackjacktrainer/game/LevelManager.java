@@ -10,8 +10,12 @@ import java.util.List;
  * <ol>
  *   <li>Showing more cards per round</li>
  *   <li>Reducing the delay between cards</li>
- *   <li>Reducing the answer time limit (in Timed mode)</li>
+ *   <li>Reducing the answer time limit</li>
  * </ol>
+ *
+ * <p>The answer time limit is defined for every level. Whether that limit is
+ * actually enforced is a decision made by the game mode, not by this class.
+ * {@link GameController#getAnswerTimeLimit()} handles that responsibility.
  *
  * Rounds per level before advancing: {@link #ROUNDS_TO_ADVANCE}.
  */
@@ -54,14 +58,19 @@ public class LevelManager {
     /**
      * Hand-tuned progression table.
      *
+     * <p>Every level now carries an answer time limit. Levels 1–3 receive the
+     * same 20 s limit as level 4, matching the Timed-mode experience.
+     * Whether the limit is enforced depends on the active {@link GameMode};
+     * see {@link GameController#getAnswerTimeLimit()}.
+     *
      * Pattern: more cards → faster pace → tighter answer window.
      */
     private List<LevelConfig> buildLevelTable() {
         List<LevelConfig> table = new ArrayList<>();
         //                  lvl  cards  delay(s)  answerLimit(s)
-        table.add(new LevelConfig(1,   4,    1.8,   0));
-        table.add(new LevelConfig(2,   5,    1.5,   0));
-        table.add(new LevelConfig(3,   6,    1.3,   0));
+        table.add(new LevelConfig(1,   4,    1.8,  20));
+        table.add(new LevelConfig(2,   5,    1.5,  20));
+        table.add(new LevelConfig(3,   6,    1.3,  20));
         table.add(new LevelConfig(4,   6,    1.1,  20));
         table.add(new LevelConfig(5,   7,    1.0,  18));
         table.add(new LevelConfig(6,   7,    0.9,  15));
