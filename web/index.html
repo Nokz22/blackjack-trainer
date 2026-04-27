@@ -3,144 +3,201 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Blackjack Card Counting Trainer — master the Hi-Lo system in your browser. No install required.">
-  <title>Blackjack Trainer — Hi-Lo Card Counting</title>
+  <meta name="description" content="Blackjack Card Counting Trainer — master the Hi-Lo system in your browser.">
+  <title>Blackjack Trainer</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
-  <!-- ── MENU SCREEN ───────────────────────────────── -->
+  <!-- ═══════════════════════════════════════════════════════
+       NAVBAR — fixed top bar, mirrors JavaFX toolbar
+       ═══════════════════════════════════════════════════════ -->
+  <nav class="navbar">
+    <div class="navbar-left">
+      <span class="nav-logo">♠ Blackjack Trainer</span>
+    </div>
+    <div class="navbar-right" id="nav-controls" style="display:none">
+      <div class="nav-pill" id="nav-level">Level 1</div>
+      <div class="nav-pill gold" id="nav-score">Score: 0</div>
+      <button class="nav-btn btn-quit" id="btn-quit">✕ Quit</button>
+    </div>
+  </nav>
+
+  <!-- ═══════════════════════════════════════════════════════
+       MENU SCREEN
+       ═══════════════════════════════════════════════════════ -->
   <div id="screen-menu" class="screen active">
-    <div class="logo">
-      <span class="logo-suit">♠ ♥ ♦ ♣</span>
-      <h1>Blackjack <span>Trainer</span></h1>
-      <p>Hi-Lo Card Counting System</p>
-    </div>
+    <div class="menu-wrap">
 
-    <div class="mode-grid">
-      <div class="mode-card selected" data-mode="PRACTICE">
-        <span class="mode-icon">🎓</span>
-        <span class="mode-name">Practice</span>
-        <span class="mode-desc">No time limit. Build your accuracy.</span>
-      </div>
-      <div class="mode-card" data-mode="TIMED">
-        <span class="mode-icon">⏱</span>
-        <span class="mode-name">Timed</span>
-        <span class="mode-desc">Answer before the clock runs out!</span>
-      </div>
-      <div class="mode-card" data-mode="ENDLESS">
-        <span class="mode-icon">♾</span>
-        <span class="mode-name">Endless</span>
-        <span class="mode-desc">Keep going until you get one wrong.</span>
-      </div>
-    </div>
+      <h1 class="menu-title">♠ Blackjack Counting Trainer</h1>
 
-    <div class="hilo-ref">
-      <h3>Hi-Lo Quick Reference</h3>
-      <div class="hilo-table">
-        <div class="hilo-row">
-          <span class="hilo-cards">2 · 3 · 4 · 5 · 6</span>
-          <span class="hilo-val pos">+1</span>
-        </div>
-        <div class="hilo-row">
-          <span class="hilo-cards">7 · 8 · 9</span>
-          <span class="hilo-val neu">0</span>
-        </div>
-        <div class="hilo-row">
-          <span class="hilo-cards">10 · J · Q · K · A</span>
-          <span class="hilo-val neg">−1</span>
+      <!-- How to Play -->
+      <div class="info-card">
+        <div class="info-card-title">📖 How to Play</div>
+        <p>Cards appear on screen one by one, simulating a real blackjack shoe.</p>
+        <br>
+        <p>Use the Hi-Lo system to track the running count as each card is revealed:</p>
+        <ul class="hilo-list">
+          <li>2 – 6 &nbsp;→ <span class="val-pos">+1</span> &nbsp;(low cards benefit the dealer)</li>
+          <li>7 – 9 &nbsp;→ <span class="val-neu">&nbsp;0</span> &nbsp;(neutral)</li>
+          <li>10 / J / Q / K / A &nbsp;→ <span class="val-neg">−1</span> &nbsp;(high cards benefit the player)</li>
+        </ul>
+        <br>
+        <p>After the last card, type your running count and press Enter or click Confirm.</p>
+        <br>
+        <div class="tip-box">
+          💡 In <strong>Practice Mode</strong> a small badge above each card shows its Hi-Lo value,
+          so you can learn the system at your own pace.
         </div>
       </div>
-    </div>
 
-    <button class="btn-start" id="btn-start">Start →</button>
+      <!-- Scoring -->
+      <div class="info-card">
+        <div class="info-card-title">🏆 Scoring</div>
+        <p>Points = 100 base + (level × 10) + (streak × 5, max 100) + speed bonus</p>
+        <p style="margin-top:0.3rem">Advance a level after 5 correct answers in a row.</p>
+      </div>
+
+      <!-- Mode selection -->
+      <h2 class="choose-title">Choose Your Mode</h2>
+
+      <div class="mode-list">
+        <div class="mode-row selected" data-mode="PRACTICE">
+          <div class="mode-row-text">
+            <span class="mode-row-name">Practice Mode</span>
+            <span class="mode-row-desc">No time limit. Build your accuracy.</span>
+          </div>
+          <span class="mode-row-check">✓</span>
+        </div>
+        <div class="mode-row" data-mode="TIMED">
+          <div class="mode-row-text">
+            <span class="mode-row-name">Timed Mode</span>
+            <span class="mode-row-desc">Answer before the clock runs out!</span>
+          </div>
+          <span class="mode-row-check">✓</span>
+        </div>
+        <div class="mode-row" data-mode="ENDLESS">
+          <div class="mode-row-text">
+            <span class="mode-row-name">Endless Mode</span>
+            <span class="mode-row-desc">Keep going until you get one wrong.</span>
+          </div>
+          <span class="mode-row-check">✓</span>
+        </div>
+      </div>
+
+      <button class="btn-primary" id="btn-start">Start Game</button>
+
+    </div>
   </div>
 
-  <!-- ── GAME SCREEN ───────────────────────────────── -->
+  <!-- ═══════════════════════════════════════════════════════
+       GAME SCREEN
+       ═══════════════════════════════════════════════════════ -->
   <div id="screen-game" class="screen">
-    <div class="hud">
-      <div class="hud-stat">
-        <span class="hud-label">Score</span>
-        <span class="hud-val gold" id="hud-score">0</span>
-      </div>
-      <div class="hud-stat">
-        <span class="hud-label">Level</span>
-        <span class="hud-val" id="hud-level">1</span>
-      </div>
-      <div class="level-badge" id="level-badge">4 cards · 1.8s</div>
-      <div class="hud-stat">
-        <span class="hud-label">Streak</span>
-        <span class="hud-val" id="hud-streak">0</span>
-      </div>
-      <div class="hud-stat">
-        <span class="hud-label">Accuracy</span>
-        <span class="hud-val" id="hud-acc">—</span>
-      </div>
-      <button class="btn-quit" id="btn-quit">Quit</button>
-    </div>
-    <div class="timer-bar-wrap"><div class="timer-bar" id="timer-bar"></div></div>
+    <div class="game-wrap">
 
-    <div class="game-area">
-      <div class="phase-label" id="phase-label">Preparing...</div>
-      <div class="card-stage" id="card-stage"></div>
-      <div class="feedback-bar" id="feedback-bar"></div>
-
-      <div class="answer-zone">
-        <span class="answer-label">Running Count</span>
-        <div class="answer-row">
-          <input class="count-input" type="number" id="count-input" placeholder="0" disabled>
-          <button class="btn-confirm" id="btn-confirm" disabled>Confirm ↵</button>
+      <!-- Timer bar — visible only in TIMED mode -->
+      <div class="timer-wrap" id="timer-wrap" style="display:none">
+        <div class="timer-track">
+          <div class="timer-fill" id="timer-fill"></div>
         </div>
-        <div class="streak-label" id="streak-label"></div>
+        <span class="timer-label" id="timer-label">20s</span>
       </div>
 
-      <button class="btn-next" id="btn-next" style="display:none">Next Round →</button>
-    </div>
+      <!-- Cards -->
+      <div class="card-stage" id="card-stage"></div>
 
-    <div class="levelup-toast" id="levelup-toast">⬆ Level Up!</div>
+      <!-- Feedback line -->
+      <div class="feedback-row" id="feedback-row"></div>
+
+      <!-- Answer input -->
+      <div class="input-row">
+        <label class="input-label" for="count-input">Running count:</label>
+        <input
+          class="count-input"
+          type="number"
+          id="count-input"
+          placeholder="e.g. -2"
+          disabled
+          autocomplete="off"
+        >
+        <button class="btn-confirm" id="btn-confirm" disabled>Confirm ↵</button>
+      </div>
+
+      <!-- Next round button — hidden until answer submitted -->
+      <div id="next-row" style="display:none">
+        <button class="btn-next" id="btn-next">Next Round →</button>
+      </div>
+
+    </div>
   </div>
 
-  <!-- ── GAME OVER SCREEN ──────────────────────────── -->
+  <!-- ═══════════════════════════════════════════════════════
+       GAME OVER SCREEN
+       ═══════════════════════════════════════════════════════ -->
   <div id="screen-gameover" class="screen">
-    <div class="gameover-title" id="gameover-title">Session <span>Complete</span></div>
+    <div class="gameover-wrap">
 
-    <div class="stats-grid">
-      <div class="stat-card">
-        <span class="stat-card-label">Final Score</span>
-        <span class="stat-card-val gold" id="go-score">0</span>
-      </div>
-      <div class="stat-card">
-        <span class="stat-card-label">Max Level</span>
-        <span class="stat-card-val" id="go-level">1</span>
-      </div>
-      <div class="stat-card">
-        <span class="stat-card-label">Best Streak</span>
-        <span class="stat-card-val" id="go-streak">0</span>
-      </div>
-      <div class="stat-card">
-        <span class="stat-card-label">Accuracy</span>
-        <span class="stat-card-val" id="go-acc">0%</span>
-      </div>
-      <div class="stat-card">
-        <span class="stat-card-label">Rounds</span>
-        <span class="stat-card-val" id="go-rounds">0</span>
-      </div>
-      <div class="stat-card">
-        <span class="stat-card-label">High Score</span>
-        <span class="stat-card-val gold" id="go-highscore">0</span>
-      </div>
-    </div>
+      <h2 class="gameover-title" id="gameover-title">Session Complete</h2>
 
-    <div class="btn-row">
-      <button class="btn-start" id="btn-play-again">Play Again</button>
-      <button class="btn-secondary" id="btn-menu">Menu</button>
+      <div class="go-stats">
+        <div class="go-stat">
+          <span class="go-stat-label">Final Score</span>
+          <span class="go-stat-val gold" id="go-score">0</span>
+        </div>
+        <div class="go-stat">
+          <span class="go-stat-label">Max Level</span>
+          <span class="go-stat-val" id="go-level">1</span>
+        </div>
+        <div class="go-stat">
+          <span class="go-stat-label">Best Streak</span>
+          <span class="go-stat-val" id="go-streak">0</span>
+        </div>
+        <div class="go-stat">
+          <span class="go-stat-label">Accuracy</span>
+          <span class="go-stat-val" id="go-acc">0%</span>
+        </div>
+        <div class="go-stat">
+          <span class="go-stat-label">Rounds</span>
+          <span class="go-stat-val" id="go-rounds">0</span>
+        </div>
+        <div class="go-stat">
+          <span class="go-stat-label">High Score</span>
+          <span class="go-stat-val gold" id="go-highscore">0</span>
+        </div>
+      </div>
+
+      <div class="go-buttons">
+        <button class="btn-primary" id="btn-play-again">Play Again</button>
+        <button class="btn-secondary" id="btn-menu">Menu</button>
+      </div>
+
     </div>
   </div>
 
+  <!-- ═══════════════════════════════════════════════════════
+       BOTTOM STATS BAR — mirrors JavaFX status bar
+       ═══════════════════════════════════════════════════════ -->
+  <div class="stats-bar">
+    <span class="stats-item" id="sb-acc">Accuracy: —</span>
+    <span class="stats-item" id="sb-streak">Best Streak: 0</span>
+    <span class="stats-item" id="sb-high">High Score: 0</span>
+  </div>
+
+  <!-- Level-up toast notification -->
+  <div class="levelup-toast" id="levelup-toast">⬆ Level Up!</div>
+
+  <!--
+    Script load order matters:
+      1. core.js   — pure logic (no DOM), loaded first
+      2. ui.js     — DOM rendering helpers, depends on core
+      3. game.js   — GameController + event wiring, depends on both
+  -->
   <script src="js/core.js"></script>
   <script src="js/ui.js"></script>
   <script src="js/game.js"></script>
+
 </body>
 </html>

@@ -19,3 +19,8 @@ mvnw.cmd
 out/
 testAi
 testAi.pub
+
+
+target/
+.idea/
+*.class
