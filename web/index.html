@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Blackjack Card Counting Trainer — master the Hi-Lo system in your browser. No install required.">
+  <title>Blackjack Trainer — Hi-Lo Card Counting</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- ── MENU SCREEN ───────────────────────────────── -->
+  <div id="screen-menu" class="screen active">
+    <div class="logo">
+      <span class="logo-suit">♠ ♥ ♦ ♣</span>
+      <h1>Blackjack <span>Trainer</span></h1>
+      <p>Hi-Lo Card Counting System</p>
+    </div>
+
+    <div class="mode-grid">
+      <div class="mode-card selected" data-mode="PRACTICE">
+        <span class="mode-icon">🎓</span>
+        <span class="mode-name">Practice</span>
+        <span class="mode-desc">No time limit. Build your accuracy.</span>
+      </div>
+      <div class="mode-card" data-mode="TIMED">
+        <span class="mode-icon">⏱</span>
+        <span class="mode-name">Timed</span>
+        <span class="mode-desc">Answer before the clock runs out!</span>
+      </div>
+      <div class="mode-card" data-mode="ENDLESS">
+        <span class="mode-icon">♾</span>
+        <span class="mode-name">Endless</span>
+        <span class="mode-desc">Keep going until you get one wrong.</span>
+      </div>
+    </div>
+
+    <div class="hilo-ref">
+      <h3>Hi-Lo Quick Reference</h3>
+      <div class="hilo-table">
+        <div class="hilo-row">
+          <span class="hilo-cards">2 · 3 · 4 · 5 · 6</span>
+          <span class="hilo-val pos">+1</span>
+        </div>
+        <div class="hilo-row">
+          <span class="hilo-cards">7 · 8 · 9</span>
+          <span class="hilo-val neu">0</span>
+        </div>
+        <div class="hilo-row">
+          <span class="hilo-cards">10 · J · Q · K · A</span>
+          <span class="hilo-val neg">−1</span>
+        </div>
+      </div>
+    </div>
+
+    <button class="btn-start" id="btn-start">Start →</button>
+  </div>
+
+  <!-- ── GAME SCREEN ───────────────────────────────── -->
+  <div id="screen-game" class="screen">
+    <div class="hud">
+      <div class="hud-stat">
+        <span class="hud-label">Score</span>
+        <span class="hud-val gold" id="hud-score">0</span>
+      </div>
+      <div class="hud-stat">
+        <span class="hud-label">Level</span>
+        <span class="hud-val" id="hud-level">1</span>
+      </div>
+      <div class="level-badge" id="level-badge">4 cards · 1.8s</div>
+      <div class="hud-stat">
+        <span class="hud-label">Streak</span>
+        <span class="hud-val" id="hud-streak">0</span>
+      </div>
+      <div class="hud-stat">
+        <span class="hud-label">Accuracy</span>
+        <span class="hud-val" id="hud-acc">—</span>
+      </div>
+      <button class="btn-quit" id="btn-quit">Quit</button>
+    </div>
+    <div class="timer-bar-wrap"><div class="timer-bar" id="timer-bar"></div></div>
+
+    <div class="game-area">
+      <div class="phase-label" id="phase-label">Preparing...</div>
+      <div class="card-stage" id="card-stage"></div>
+      <div class="feedback-bar" id="feedback-bar"></div>
+
+      <div class="answer-zone">
+        <span class="answer-label">Running Count</span>
+        <div class="answer-row">
+          <input class="count-input" type="number" id="count-input" placeholder="0" disabled>
+          <button class="btn-confirm" id="btn-confirm" disabled>Confirm ↵</button>
+        </div>
+        <div class="streak-label" id="streak-label"></div>
+      </div>
+
+      <button class="btn-next" id="btn-next" style="display:none">Next Round →</button>
+    </div>
+
+    <div class="levelup-toast" id="levelup-toast">⬆ Level Up!</div>
+  </div>
+
+  <!-- ── GAME OVER SCREEN ──────────────────────────── -->
+  <div id="screen-gameover" class="screen">
+    <div class="gameover-title" id="gameover-title">Session <span>Complete</span></div>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <span class="stat-card-label">Final Score</span>
+        <span class="stat-card-val gold" id="go-score">0</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-card-label">Max Level</span>
+        <span class="stat-card-val" id="go-level">1</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-card-label">Best Streak</span>
+        <span class="stat-card-val" id="go-streak">0</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-card-label">Accuracy</span>
+        <span class="stat-card-val" id="go-acc">0%</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-card-label">Rounds</span>
+        <span class="stat-card-val" id="go-rounds">0</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-card-label">High Score</span>
+        <span class="stat-card-val gold" id="go-highscore">0</span>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn-start" id="btn-play-again">Play Again</button>
+      <button class="btn-secondary" id="btn-menu">Menu</button>
+    </div>
+  </div>
+
+  <script src="js/core.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/game.js"></script>
+</body>
+</html>
