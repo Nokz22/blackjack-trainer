@@ -8,23 +8,24 @@
  *   - Delegates level advancement to LevelManager (shouldAdvance)
  *   - Updates GameState
  *
- * Key behaviours added in this revision:
+ * Key behaviours:
  *   - PRACTICE mode: Hi-Lo badge revealed above each card as it is dealt
  *   - TIMED mode:    countdown timer starts after all cards are dealt;
  *                    time limit decreases with level (LevelConfig.timeLimit)
  *   - ENDLESS mode:  first wrong answer ends the session
+ *   - ALL modes:     card-deal sound on each reveal, correct/wrong feedback sounds
  *
- * Depends on: core.js, ui.js  (loaded before this file in index.html)
+ * Depends on: core.js, audio.js, ui.js  (loaded before this file in index.html)
  */
 
 'use strict';
 
 // ── Session-level variables ───────────────────────────────────────────────────
 
-/** @type {object|null}  Current GameState (created by core.createGameState) */
+/** @type {object|null} Current GameState (created by core.createGameState) */
 let state = null;
 
-/** @type {Array} Current shoe; reshuffle when it runs low */
+/** @type {Array} Current shoe; reshuffled when running low */
 let deck = [];
 
 /** @type {Array} Cards dealt in the current round */
@@ -77,13 +78,19 @@ document.addEventListener('DOMContentLoaded', () => {
 /**
  * Reads the selected mode from the menu, initialises a fresh GameState,
  * builds the shoe, and starts the first round.
+ *
+ * AudioManager.init() is called here — this is the first user gesture,
+ * which satisfies the browser autoplay policy for background music.
  */
 function startGame() {
   const selectedRow = document.querySelector('.mode-row.selected');
   const mode = selectedRow ? selectedRow.dataset.mode : 'PRACTICE';
 
+  // Initialise audio on first user gesture (browser autoplay policy)
+  AudioManager.init();
+
   state = createGameState(mode);
-  deck  = buildDeck(4);           // 4-deck shoe — mirrors Deck(4) in Java
+  deck  = buildDeck(4);   // 4-deck shoe — mirrors Deck(4) in Java
 
   showNavControls();
   updateHUD(state);
@@ -94,8 +101,8 @@ function startGame() {
 /**
  * Prepares a new round:
  *   1. Resets UI state
- *   2. Deals `cfg.cards` cards from the shoe
- *   3. Animates each card reveal with `cfg.delay` ms between cards
+ *   2. Deals cfg.cards cards from the shoe
+ *   3. Animates each card reveal with cfg.delay ms between cards
  */
 function startRound() {
   if (!state.active) { endGame(); return; }
@@ -122,14 +129,16 @@ function startRound() {
 }
 
 /**
- * Recursively reveals one card every `cfg.delay` ms.
+ * Recursively reveals one card every cfg.delay ms.
+ * Plays the card-deal sound on each reveal.
  * Mirrors the JavaFX Timeline animation in UIController.
  *
  * @param {object} cfg - LevelConfig for the current level
  */
 function scheduleDeal(cfg) {
   if (dealIdx < currentHand.length) {
-    revealCard(dealIdx);   // ui.js — also shows badge if isPractice
+    revealCard(dealIdx);       // ui.js — also shows badge if isPractice
+    AudioManager.playCard();   // card-deal sound effect
     dealIdx++;
     dealTimeout = setTimeout(() => scheduleDeal(cfg), cfg.delay);
   } else {
@@ -139,7 +148,7 @@ function scheduleDeal(cfg) {
 
 /**
  * Called when every card has been revealed.
- * Enables the answer input and starts the countdown timer in TIMED mode.
+ * Enables the answer input and starts the countdown timer.
  *
  * @param {object} cfg - LevelConfig for the current level
  */
@@ -147,7 +156,7 @@ function onAllCardsDealt(cfg) {
   enableInput();
   roundStart = Date.now();
 
-  // Timer runs in TIMED mode (and ENDLESS with a time limit) but NOT in PRACTICE
+  // Timer runs in TIMED and ENDLESS modes; NOT in PRACTICE
   const needsTimer = cfg.timeLimit > 0 && state.mode !== 'PRACTICE';
   if (needsTimer) {
     startTimerBar(cfg.timeLimit, onTimerExpired);
@@ -162,7 +171,7 @@ function onAllCardsDealt(cfg) {
  */
 function confirmAnswer() {
   const playerCount = getInputValue();
-  if (playerCount === null) return;   // empty / non-numeric input — ignore
+  if (playerCount === null) return;   // empty / non-numeric — ignore
 
   const correctCount    = runningCount(currentHand);   // HiLoCountSystem
   const correct         = playerCount === correctCount;
@@ -172,6 +181,13 @@ function confirmAnswer() {
   revealAllBadges();   // show Hi-Lo hints on all cards after answer
   disableInput();
 
+  // Play feedback sound
+  if (correct) {
+    AudioManager.playCorrect();
+  } else {
+    AudioManager.playWrong();
+  }
+
   let points  = 0;
   let levelUp = false;
 
@@ -179,7 +195,7 @@ function confirmAnswer() {
     // ScoreManager.calculatePoints
     points = calculatePoints(state.level, state.streak, responseTimeSec);
 
-    // Update GameState — mirrors GameState.recordCorrect() + incrementScore()
+    // GameState.recordCorrect() + incrementScore()
     state.score += points;
     state.totalRounds++;
     state.correctRounds++;
@@ -211,7 +227,7 @@ function confirmAnswer() {
 }
 
 /**
- * Called when the TIMED mode countdown reaches zero.
+ * Called when the countdown timer reaches zero.
  * Treated as an incorrect answer — mirrors the Java timer expiry logic.
  */
 function onTimerExpired() {
@@ -219,6 +235,7 @@ function onTimerExpired() {
 
   revealAllBadges();
   disableInput();
+  AudioManager.playWrong();
 
   // GameState.recordIncorrect()
   state.totalRounds++;
@@ -243,13 +260,13 @@ function nextRound() {
 
 /**
  * Ends the current session:
- *   1. Clears any pending timeouts/intervals
+ *   1. Clears pending timeouts/intervals
  *   2. Persists high score and best streak (StatsPersistence)
  *   3. Shows the game-over screen
  */
 function endGame() {
   if (dealTimeout) clearTimeout(dealTimeout);
   stopTimerBar();
-  persistStats(state);                            // StatsPersistence.save()
+  persistStats(state);   // StatsPersistence.save()
   showGameOver(state, state.mode === 'ENDLESS');
 }

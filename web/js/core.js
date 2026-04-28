@@ -70,9 +70,9 @@ const MAX_LEVEL = 10;
  * Fields: level, cards (cardCount), delay (ms), timeLimit (s, 0 = none)
  */
 const LEVELS = [
-  { level:1,  cards:4,  delay:1800, timeLimit:0  },
-  { level:2,  cards:5,  delay:1500, timeLimit:0  },
-  { level:3,  cards:6,  delay:1300, timeLimit:0  },
+  { level:1,  cards:4,  delay:1800, timeLimit:20 },
+  { level:2,  cards:5,  delay:1500, timeLimit:20 },
+  { level:3,  cards:6,  delay:1300, timeLimit:20 },
   { level:4,  cards:6,  delay:1100, timeLimit:20 },
   { level:5,  cards:7,  delay:1000, timeLimit:18 },
   { level:6,  cards:7,  delay:900,  timeLimit:15 },

@@ -18,10 +18,16 @@
     <div class="navbar-left">
       <span class="nav-logo">♠ Blackjack Trainer</span>
     </div>
-    <div class="navbar-right" id="nav-controls" style="display:none">
-      <div class="nav-pill" id="nav-level">Level 1</div>
-      <div class="nav-pill gold" id="nav-score">Score: 0</div>
-      <button class="nav-btn btn-quit" id="btn-quit">✕ Quit</button>
+    <div class="navbar-right">
+      <!-- Sound toggle — always visible so user can mute before starting -->
+      <button class="nav-btn" id="nav-sound" title="Toggle sound" onclick="AudioManager.toggleMute()">🔊</button>
+
+      <!-- In-game controls — hidden on menu screen -->
+      <div id="nav-controls" style="display:none">
+        <div class="nav-pill" id="nav-level">Level 1</div>
+        <div class="nav-pill gold" id="nav-score">Score: 0</div>
+        <button class="nav-btn btn-quit" id="btn-quit">✕ Quit</button>
+      </div>
     </div>
   </nav>
 
@@ -98,7 +104,7 @@
   <div id="screen-game" class="screen">
     <div class="game-wrap">
 
-      <!-- Timer bar — visible only in TIMED mode -->
+      <!-- Timer bar — visible only in TIMED / PRACTICE mode -->
       <div class="timer-wrap" id="timer-wrap" style="display:none">
         <div class="timer-track">
           <div class="timer-fill" id="timer-fill"></div>
@@ -190,12 +196,14 @@
   <div class="levelup-toast" id="levelup-toast">⬆ Level Up!</div>
 
   <!--
-    Script load order matters:
-      1. core.js   — pure logic (no DOM), loaded first
-      2. ui.js     — DOM rendering helpers, depends on core
-      3. game.js   — GameController + event wiring, depends on both
+    Script load order:
+      1. core.js   — pure game logic, no DOM
+      2. audio.js  — AudioManager, no DOM dependencies
+      3. ui.js     — DOM rendering, depends on core
+      4. game.js   — GameController + event wiring, depends on all above
   -->
   <script src="js/core.js"></script>
+  <script src="js/audio.js"></script>
   <script src="js/ui.js"></script>
   <script src="js/game.js"></script>
 
