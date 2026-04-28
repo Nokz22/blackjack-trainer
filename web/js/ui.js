@@ -28,7 +28,7 @@ function showScreen(name) {
  * Called once when a game session starts.
  */
 function showNavControls() {
-  document.getElementById('nav-controls').style.display = '';
+  document.getElementById('nav-controls').style.display = 'flex';
 }
 
 function hideNavControls() {
