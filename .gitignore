@@ -26,3 +26,4 @@ target/
 *.class.DS_Store
 **/.DS_Store
 .idea/
+.DS_Store
