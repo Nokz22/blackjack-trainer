@@ -23,4 +23,5 @@ testAi.pub
 
 target/
 .idea/
-*.class
+*.class.DS_Store
+**/.DS_Store
