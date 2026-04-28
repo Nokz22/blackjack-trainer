@@ -1,29 +1,30 @@
-#Logs
+# Logs
 *.log
 
-#Java archives
+# Java archives
 *.jar
 *.war
 *.ear
 
-#Maven wrapper
+# Maven wrapper
 .mvn/
 mvnw
 mvnw.cmd
 
-#Temp files
+# Temp files
 *.tmp
 *.swp
 
-#IntelliJ extra
+# IntelliJ
+.idea/
+*.iml
 out/
-testAi
-testAi.pub
-
-
 target/
-.idea/
-*.class.DS_Store
+
+# Compiled classes
+*.class
+
+# macOS
+.DS_Store
 **/.DS_Store
-.idea/
 .DS_Store
