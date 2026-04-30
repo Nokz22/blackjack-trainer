@@ -330,7 +330,7 @@ Pull requests are welcome. Please:
 
 ## 📄 License
 
-MIT © 2024 Nokz22
+MIT © 2026 Nokz22
 
 ---
 
