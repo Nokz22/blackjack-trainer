@@ -21,21 +21,15 @@ The browser version is a faithful port of the Java app. Same game modes, same le
 
 ## 📸 Preview
 
-```
-    ┌─────────────────────────────────────────────────────────┐
-    │  ♠ Blackjack Trainer          Level 3   Score: 1 450    │
-    ├─────────────────────────────────────────────────────────┤
-    │  ████████████████████████░░░░░░░░░░░░  15s              │
-    │       ┌──────┐  ┌──────┐  ┌──────┐  ┌──────┐           │
-    │       │  5   │  │  K   │  │  2   │  │  9   │           │
-    │       │  ♦   │  │  ♠   │  │  ♥   │  │  ♣   │           │
-    │       └──────┘  └──────┘  └──────┘  └──────┘           │
-    │              ✓ Correct!  +165 pts                       │
-    │     Running count:  [ -1  ]   [ Confirm ↵ ]             │
-    ├─────────────────────────────────────────────────────────┤
-    │   Accuracy: 78.3%     Best Streak: 9     High Score: 2k │
-    └─────────────────────────────────────────────────────────┘
-```
+**Home screen — rules & mode selection**
+
+![Home screen](docs/screenshots/home-top.png)
+
+![Mode selection](docs/screenshots/home-mode-select.png)
+
+**In-game — Practice mode with Hi-Lo badges**
+
+![Gameplay](docs/screenshots/gameplay.png)
 
 ---
 
